@@ -1,0 +1,360 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MyShopModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="MyShopModelStoreContainer">
+          <EntitySet Name="Agents" EntityType="MyShopModel.Store.Agents" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="DocumentDetails" EntityType="MyShopModel.Store.DocumentDetails" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Documents" EntityType="MyShopModel.Store.Documents" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Products" EntityType="MyShopModel.Store.Products" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Users" EntityType="MyShopModel.Store.Users" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_DocumentDetails_Documents" Association="MyShopModel.Store.FK_DocumentDetails_Documents">
+            <End Role="Documents" EntitySet="Documents" />
+            <End Role="DocumentDetails" EntitySet="DocumentDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocumentDetails_Products" Association="MyShopModel.Store.FK_DocumentDetails_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="DocumentDetails" EntitySet="DocumentDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Documents_Agents" Association="MyShopModel.Store.FK_Documents_Agents">
+            <End Role="Agents" EntitySet="Agents" />
+            <End Role="Documents" EntitySet="Documents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Documents_Agents1" Association="MyShopModel.Store.FK_Documents_Agents1">
+            <End Role="Agents" EntitySet="Agents" />
+            <End Role="Documents" EntitySet="Documents" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Agents">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Tel" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="DocumentDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="DocumentId" Type="int" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="Price" Type="money" Nullable="false" />
+          <Property Name="Qty" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Documents">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Number" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="AgentFromId" Type="int" Nullable="false" />
+          <Property Name="AgentToId" Type="int" Nullable="false" />
+          <Property Name="Summa" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Price" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Login" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_DocumentDetails_Documents">
+          <End Role="Documents" Type="MyShopModel.Store.Documents" Multiplicity="1" />
+          <End Role="DocumentDetails" Type="MyShopModel.Store.DocumentDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Documents">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DocumentDetails">
+              <PropertyRef Name="DocumentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocumentDetails_Products">
+          <End Role="Products" Type="MyShopModel.Store.Products" Multiplicity="1" />
+          <End Role="DocumentDetails" Type="MyShopModel.Store.DocumentDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DocumentDetails">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Documents_Agents">
+          <End Role="Agents" Type="MyShopModel.Store.Agents" Multiplicity="1" />
+          <End Role="Documents" Type="MyShopModel.Store.Documents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agents">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Documents">
+              <PropertyRef Name="AgentFromId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Documents_Agents1">
+          <End Role="Agents" Type="MyShopModel.Store.Agents" Multiplicity="1" />
+          <End Role="Documents" Type="MyShopModel.Store.Documents" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agents">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Documents">
+              <PropertyRef Name="AgentToId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MyShopModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="MyShopEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Agents" EntityType="MyShopModel.Agent" />
+          <EntitySet Name="DocumentDetails" EntityType="MyShopModel.DocumentDetail" />
+          <EntitySet Name="Documents" EntityType="MyShopModel.Document" />
+          <EntitySet Name="Products" EntityType="MyShopModel.Product" />
+          <EntitySet Name="Users" EntityType="MyShopModel.User" />
+          <AssociationSet Name="FK_Documents_Agents" Association="MyShopModel.FK_Documents_Agents">
+            <End Role="Agent" EntitySet="Agents" />
+            <End Role="Document" EntitySet="Documents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Documents_Agents1" Association="MyShopModel.FK_Documents_Agents1">
+            <End Role="Agent" EntitySet="Agents" />
+            <End Role="Document" EntitySet="Documents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocumentDetails_Documents" Association="MyShopModel.FK_DocumentDetails_Documents">
+            <End Role="Document" EntitySet="Documents" />
+            <End Role="DocumentDetail" EntitySet="DocumentDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DocumentDetails_Products" Association="MyShopModel.FK_DocumentDetails_Products">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="DocumentDetail" EntitySet="DocumentDetails" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Agent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Address" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Tel" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Documents" Relationship="MyShopModel.FK_Documents_Agents" FromRole="Agent" ToRole="Document" />
+          <NavigationProperty Name="Documents1" Relationship="MyShopModel.FK_Documents_Agents1" FromRole="Agent" ToRole="Document" />
+        </EntityType>
+        <EntityType Name="DocumentDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="DocumentId" Nullable="false" />
+          <Property Type="Int32" Name="ProductId" Nullable="false" />
+          <Property Type="Decimal" Name="Price" Nullable="false" Precision="19" Scale="4" />
+          <Property Type="Decimal" Name="Qty" Nullable="false" Precision="19" Scale="4" />
+          <NavigationProperty Name="Document" Relationship="MyShopModel.FK_DocumentDetails_Documents" FromRole="DocumentDetail" ToRole="Document" />
+          <NavigationProperty Name="Product" Relationship="MyShopModel.FK_DocumentDetails_Products" FromRole="DocumentDetail" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Document">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Date" Nullable="false" />
+          <Property Type="String" Name="Number" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="AgentFromId" Nullable="false" />
+          <Property Type="Int32" Name="AgentToId" Nullable="false" />
+          <Property Type="Decimal" Name="Summa" Nullable="false" Precision="19" Scale="4" />
+          <NavigationProperty Name="Agent" Relationship="MyShopModel.FK_Documents_Agents" FromRole="Document" ToRole="Agent" />
+          <NavigationProperty Name="Agent1" Relationship="MyShopModel.FK_Documents_Agents1" FromRole="Document" ToRole="Agent" />
+          <NavigationProperty Name="DocumentDetails" Relationship="MyShopModel.FK_DocumentDetails_Documents" FromRole="Document" ToRole="DocumentDetail" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Decimal" Name="Price" Nullable="false" Precision="19" Scale="4" />
+          <NavigationProperty Name="DocumentDetails" Relationship="MyShopModel.FK_DocumentDetails_Products" FromRole="Product" ToRole="DocumentDetail" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Login" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Password" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Documents_Agents">
+          <End Type="MyShopModel.Agent" Role="Agent" Multiplicity="1" />
+          <End Type="MyShopModel.Document" Role="Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="AgentFromId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Documents_Agents1">
+          <End Type="MyShopModel.Agent" Role="Agent" Multiplicity="1" />
+          <End Type="MyShopModel.Document" Role="Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agent">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="AgentToId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocumentDetails_Documents">
+          <End Type="MyShopModel.Document" Role="Document" Multiplicity="1" />
+          <End Type="MyShopModel.DocumentDetail" Role="DocumentDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DocumentDetail">
+              <PropertyRef Name="DocumentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DocumentDetails_Products">
+          <End Type="MyShopModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="MyShopModel.DocumentDetail" Role="DocumentDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DocumentDetail">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MyShopModelStoreContainer" CdmEntityContainer="MyShopEntities">
+          <EntitySetMapping Name="Agents">
+            <EntityTypeMapping TypeName="MyShopModel.Agent">
+              <MappingFragment StoreEntitySet="Agents">
+                <ScalarProperty Name="Tel" ColumnName="Tel" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DocumentDetails">
+            <EntityTypeMapping TypeName="MyShopModel.DocumentDetail">
+              <MappingFragment StoreEntitySet="DocumentDetails">
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="DocumentId" ColumnName="DocumentId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Documents">
+            <EntityTypeMapping TypeName="MyShopModel.Document">
+              <MappingFragment StoreEntitySet="Documents">
+                <ScalarProperty Name="Summa" ColumnName="Summa" />
+                <ScalarProperty Name="AgentToId" ColumnName="AgentToId" />
+                <ScalarProperty Name="AgentFromId" ColumnName="AgentFromId" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="MyShopModel.Product">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="MyShopModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="MyShop">
+        <EntityTypeShape EntityType="MyShopModel.Agent" Width="1.5" PointX="0.75" PointY="1.375" Height="2.1725878906249996" />
+        <EntityTypeShape EntityType="MyShopModel.DocumentDetail" Width="1.5" PointX="5.25" PointY="1.25" Height="2.3648893229166674" />
+        <EntityTypeShape EntityType="MyShopModel.Document" Width="1.5" PointX="3" PointY="1" Height="2.9417936197916674" />
+        <EntityTypeShape EntityType="MyShopModel.Product" Width="1.5" PointX="3" PointY="5.5" Height="1.7879850260416674" />
+        <EntityTypeShape EntityType="MyShopModel.User" Width="1.5" PointX="5.75" PointY="4.75" Height="1.5956835937499996" />
+        <AssociationConnector Association="MyShopModel.FK_Documents_Agents" >
+          <ConnectorPoint PointX="2.25" PointY="2.4612939453125" />
+          <ConnectorPoint PointX="3" PointY="2.4612939453125" />
+        </AssociationConnector>
+        <AssociationConnector Association="MyShopModel.FK_Documents_Agents1" >
+          <ConnectorPoint PointX="2.25" PointY="1.85564697265625" />
+          <ConnectorPoint PointX="3" PointY="1.85564697265625" />
+        </AssociationConnector>
+        <AssociationConnector Association="MyShopModel.FK_DocumentDetails_Documents" >
+          <ConnectorPoint PointX="4.5" PointY="2.4324446614583337" />
+          <ConnectorPoint PointX="5.25" PointY="2.4324446614583337" />
+        </AssociationConnector>
+        <AssociationConnector Association="MyShopModel.FK_DocumentDetails_Products" >
+          <ConnectorPoint PointX="4.5" PointY="6.8480843098958335" />
+          <ConnectorPoint PointX="5.46875" PointY="6.8480843098958335" />
+          <ConnectorPoint PointX="5.46875" PointY="3.6148893229166674" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>
