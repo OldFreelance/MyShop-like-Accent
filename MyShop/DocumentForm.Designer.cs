@@ -44,6 +44,7 @@
             this.dataGridViewDetails = new System.Windows.Forms.DataGridView();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.btnDeleteDetail = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewDetails)).BeginInit();
             this.SuspendLayout();
@@ -67,17 +68,19 @@
             this.tableLayoutPanel1.Controls.Add(this.cmbAgentFrom, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.dateTimePicker1, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.cmbAgentTo, 3, 2);
-            this.tableLayoutPanel1.Controls.Add(this.dataGridViewDetails, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.btnOk, 2, 5);
-            this.tableLayoutPanel1.Controls.Add(this.btnCancel, 3, 5);
+            this.tableLayoutPanel1.Controls.Add(this.dataGridViewDetails, 0, 5);
+            this.tableLayoutPanel1.Controls.Add(this.btnOk, 2, 6);
+            this.tableLayoutPanel1.Controls.Add(this.btnCancel, 3, 6);
+            this.tableLayoutPanel1.Controls.Add(this.btnDeleteDetail, 0, 4);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 6;
+            this.tableLayoutPanel1.RowCount = 7;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(504, 401);
@@ -199,10 +202,11 @@
             this.dataGridViewDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.tableLayoutPanel1.SetColumnSpan(this.dataGridViewDetails, 4);
             this.dataGridViewDetails.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewDetails.Location = new System.Drawing.Point(3, 103);
+            this.dataGridViewDetails.Location = new System.Drawing.Point(3, 133);
             this.dataGridViewDetails.Name = "dataGridViewDetails";
-            this.dataGridViewDetails.Size = new System.Drawing.Size(498, 265);
+            this.dataGridViewDetails.Size = new System.Drawing.Size(498, 235);
             this.dataGridViewDetails.TabIndex = 13;
+            this.dataGridViewDetails.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridViewDetails_DataError);
             // 
             // btnOk
             // 
@@ -223,6 +227,16 @@
             this.btnCancel.Text = "Отмена";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // btnDeleteDetail
+            // 
+            this.btnDeleteDetail.Image = global::MyShop.Properties.Resources.delete;
+            this.btnDeleteDetail.Location = new System.Drawing.Point(3, 103);
+            this.btnDeleteDetail.Name = "btnDeleteDetail";
+            this.btnDeleteDetail.Size = new System.Drawing.Size(23, 23);
+            this.btnDeleteDetail.TabIndex = 16;
+            this.btnDeleteDetail.UseVisualStyleBackColor = true;
+            this.btnDeleteDetail.Click += new System.EventHandler(this.btnDeleteDetail_Click);
             // 
             // DocumentForm
             // 
@@ -258,5 +272,6 @@
         private System.Windows.Forms.DataGridView dataGridViewDetails;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Button btnDeleteDetail;
     }
 }

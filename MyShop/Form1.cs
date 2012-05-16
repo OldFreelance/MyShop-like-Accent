@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace MyShop
 {
@@ -21,7 +22,8 @@ namespace MyShop
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            dataGridViewDocuments.ColumnCount = 4;
+            //Создание столбцов и привязка данных для таблицы документов
+            dataGridViewDocuments.ColumnCount = 5;
             dataGridViewDocuments.AutoGenerateColumns = false;
             dataGridViewDocuments.Columns[0].Name = "Имя";
             dataGridViewDocuments.Columns[0].DataPropertyName = "Name";
@@ -33,9 +35,12 @@ namespace MyShop
             dataGridViewDocuments.Columns[3].Name = "Id";
             dataGridViewDocuments.Columns[3].DataPropertyName = "Id";
             dataGridViewDocuments.Columns[3].Visible = false;
+            dataGridViewDocuments.Columns[4].Name = "Сумма";
+            dataGridViewDocuments.Columns[4].DataPropertyName = "Summa";
             bsDocumnts.DataSource = db.Documents;
             dataGridViewDocuments.DataSource = bsDocumnts;
 
+            //Создание столбцов и привязка данных для таблицы пользователей
             dataGridViewUsers.ColumnCount = 2;
             dataGridViewUsers.AutoGenerateColumns = false;
             dataGridViewUsers.Columns[0].Name = "Логин";
@@ -45,6 +50,7 @@ namespace MyShop
             dataGridViewUsers.Columns[1].DataPropertyName = "Password";
             dataGridViewUsers.DataSource = db.Users;
 
+            //Создание столбцов и привязка данных для таблицы корреспондентов
             dataGridViewAgents.ColumnCount = 3;
             dataGridViewAgents.AutoGenerateColumns = false;
             dataGridViewAgents.Columns[0].Name = "Имя";
@@ -56,6 +62,7 @@ namespace MyShop
             dataGridViewAgents.Columns[2].DataPropertyName = "Tel";
             dataGridViewAgents.DataSource = db.Agents;
 
+            //Создание столбцов и привязка данных для таблицы товаров
             dataGridViewProducts.ColumnCount = 2;
             dataGridViewProducts.AutoGenerateColumns = false;
             dataGridViewProducts.Columns[0].Name = "Имя";
@@ -69,6 +76,12 @@ namespace MyShop
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            //Завершение редактирования во всех таблицах
+            dataGridViewDocuments.EndEdit();
+            dataGridViewUsers.EndEdit();
+            dataGridViewAgents.EndEdit();
+            dataGridViewProducts.EndEdit();
+
             db.SaveChanges();
         }
 
@@ -76,6 +89,7 @@ namespace MyShop
         {
             if(tabControl.SelectedTab == tabPageDocuments)
             {
+                //Создание нового документа
                 Document doc = new Document {Id=-1, Name = "Новый документ", Date = DateTime.Now, AgentFromId = 1, AgentToId = 2};
                 DocumentForm documentForm = new DocumentForm {value = doc};
 
@@ -83,12 +97,17 @@ namespace MyShop
                 { 
                     if (documentForm.DialogResult == DialogResult.OK)
                     {
-                        //db.Documents.AddObject(documentForm.value);
-                        //db.SaveChanges();
-                        //dataGridViewDocuments.EndEdit();
-                        //dataGridViewDocuments.DataSource = null;
-                        //dataGridViewDocuments.DataSource = db.Documents;
-                        dataGridViewDocuments.Rows.Insert(0, new DataGridViewRow());
+                        //Пересчет суммы документа
+                        //foreach (var detail in documentForm.value.DocumentDetails)
+                        //{
+                        //    detail
+                        //}
+                        
+                        documentForm.value.Summa = documentForm.value.DocumentDetails.Sum(s => db.Products.FirstOrDefault(p=>p.Id==s.ProductId).Price * s.Qty);
+
+                        db.Documents.AddObject(documentForm.value);
+                        db.SaveChanges();
+                        //TODO: Обновить грид
                     }
                 };
 
@@ -101,6 +120,7 @@ namespace MyShop
             if (MessageBox.Show("Удалить выделенные строки", "Удаление", MessageBoxButtons.YesNo,MessageBoxIcon.Question) != DialogResult.Yes) 
                 return;
 
+            //Определяем какая вкладка сейчас активна и удаляем соответствующие объекты
             if (tabControl.SelectedTab == tabPageDocuments)
             {
                 foreach (DataGridViewRow row in dataGridViewDocuments.SelectedRows)
@@ -139,6 +159,7 @@ namespace MyShop
         {
             if(e.RowIndex >= 0 && e.ColumnIndex>=0)
             {
+                //Редактирование документа
                 DocumentForm documentForm = new DocumentForm();
                 int id = (int) (dataGridViewDocuments.Rows[e.RowIndex].Cells["Id"].Value);
                 documentForm.value = db.Documents.FirstOrDefault(s => s.Id == id);
@@ -148,9 +169,51 @@ namespace MyShop
                 {
                     if (documentForm.DialogResult == DialogResult.OK)
                     {
+                        //Удалены лишь связи. Удаление самих объектов:
+                        foreach (var detail in db.DocumentDetails.Where(s=>s.DocumentId==documentForm.value.Id))
+                        {
+                            if(!documentForm.value.DocumentDetails.Contains(detail))
+                                db.DocumentDetails.DeleteObject(detail);
+                        }
+
+                        //Пересчет суммы документа
+                        documentForm.value.Summa = documentForm.value.DocumentDetails.Sum(s => s.Product.Price*s.Qty);
+
                         db.SaveChanges();
                     }
                 };
+            }
+        }
+
+        private void tabPageStats_Enter(object sender, EventArgs e)
+        {
+            chart1.Series[0].Name = "Прибыль по месяцам";
+            chart1.Series[0].Points.Clear();
+
+            //Строим диаграмму от документа с самой ранней датой до самой поздней
+            DateTime startDate = db.Documents.Min(s => s.Date).Date;
+            DateTime endDate = db.Documents.Max(s => s.Date).Date;
+
+            DateTime index = startDate;
+
+            while(index<=endDate)
+            {
+                //Нахождение суммы всех приходных накладных за этот месяц
+                List<Document> docsIn=db.Documents.Where(s => s.Date.Month == index.Month && s.Date.Year == index.Year && s.AgentToId == 1).ToList();
+                decimal sumIn = docsIn.Sum(s => s.Summa);
+
+                //Нахождение суммы всех расходных накладных за этот месяц
+                List<Document> docsOut=db.Documents.Where(s => s.Date.Month == index.Month && s.Date.Year == index.Year && s.AgentFromId == 1).ToList();
+                decimal sumOut = docsOut.Sum(s => s.Summa);
+
+                //Создание точки на диаграмме с подписью текущего месяца
+                DataPoint point=new DataPoint();
+                point.Label = index.ToString("MMMM yyyy");
+                point.YValues = new [] { (double)(sumOut - sumIn) };
+                chart1.Series[0].Points.Add(point);
+
+                //Переход к следующему месяцу
+                index=index.AddMonths(1);
             }
         }
     }
